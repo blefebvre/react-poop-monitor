@@ -109,22 +109,16 @@ var EventList = React.createClass({
 });
 
 var TimeSelector = React.createClass({
-	getInitialState: function() {
-		var now = new Date();
-		return {
-			date: now
-		};
-	},
 	timeSelectionChanged: function(e) {
 		var eventDate = new Date();
 		var minutesInThePast = e.currentTarget.value;
 		eventDate.setMinutes(eventDate.getMinutes() - minutesInThePast);
 
-		this.setState({
-			date: eventDate
-		})
-
 		this.props.onUpdate(eventDate);
+	},
+	componentDidMount: function() {
+		// Set current date initially
+		this.props.onUpdate(new Date());
 	},
 	render: function() {
 		var timeOptions = [
@@ -146,8 +140,8 @@ var TimeSelector = React.createClass({
 		var timeOptionNodes = timeOptions.map(function(timeOption) {
 			keyIndex++;
 			return (
-				<div className="timeOption" key={keyIndex}>
-					<input type="radio" name="timeSelector" onChange={this.timeSelectionChanged} value={timeOption.minutesInThePast} /> 
+				<div className="timeOption" key={keyIndex} >
+					<input type="radio" name="timeSelector" defaultChecked={keyIndex === 1} onChange={this.timeSelectionChanged} value={timeOption.minutesInThePast} /> 
 					<label htmlFor={timeOption.minutesInThePast}>{timeOption.label}</label>
 				</div>
 			);
