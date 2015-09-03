@@ -24,6 +24,11 @@
     box-sizing: border-box;
 }
 
+html {
+    /* Enable scrolling in Ionic .content div */
+    height: 100%;
+}
+
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
@@ -32,9 +37,20 @@ body {
     margin:0px;
     padding:0px;
     width:100%;
+    /* Enable scrolling in Ionic .content div */
+    overflow-y: auto;
 }
 
 .half {
 	width: 50%;
 	float: left;
+}
+
+h4 {
+    padding-left: .3em;
+}
+
+textarea {
+    width: 100%;
+    padding: 0 .5em;
 }

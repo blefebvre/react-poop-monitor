@@ -6,18 +6,21 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 // Backend
-var firebaseURI = "https://<your Firebase app id here>.firebaseio.com";
+var firebaseURI = "https://ReactFireTodoApp.firebaseio.com";
 
 var App = React.createClass({
 	render: function() {
 		return (
-			<div>
-				<header>
-					Poop Monitor
-				</header>
+			<RouteHandler/>
+		);
+	}
+});
 
-				{/* this is the important part */}
-				<RouteHandler/>
+var Header = React.createClass({
+	render: function() {
+		return (
+			<div className="bar bar-header bar-stable">
+				<h1 className="title">{this.props.title}</h1>
 			</div>
 		);
 	}
@@ -28,8 +31,12 @@ var Dashboard = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<EventSelector/>
-				<EventHistory/>
+				<Header title="Poop Monitor"/>
+
+				<div className="content has-header">
+					<EventSelector/>
+					<EventHistory/>
+				</div>
 			</div>
 		);
 	}
@@ -131,24 +138,27 @@ var TimeSelector = React.createClass({
 				minutesInThePast: "5"
 			},
 			{ 
-				label: "Fifteen minutes ago",
-				minutesInThePast: "15"
+				label: "Ten minutes ago",
+				minutesInThePast: "10"
+			},
+			{ 
+				label: "Twenty minutes ago",
+				minutesInThePast: "20"
 			}
 		];
 
-		var keyIndex = 0;
-		var timeOptionNodes = timeOptions.map(function(timeOption) {
-			keyIndex++;
+		var timeOptionNodes = timeOptions.map(function(timeOption, keyIndex) {
 			return (
-				<div className="timeOption" key={keyIndex} >
-					<input type="radio" name="timeSelector" defaultChecked={keyIndex === 1} onChange={this.timeSelectionChanged} value={timeOption.minutesInThePast} /> 
-					<label htmlFor={timeOption.minutesInThePast}>{timeOption.label}</label>
-				</div>
+				<label htmlFor={"timeOption"+keyIndex} className="item item-radio" key={keyIndex}>
+					<input type="radio" name="timeOption" id={"timeOption"+keyIndex} defaultChecked={keyIndex === 0} onChange={this.timeSelectionChanged} value={timeOption.minutesInThePast} /> 
+					<div className="item-content">{timeOption.label}</div>
+					<i className="radio-icon ion-checkmark"></i>
+				</label>
 			);
 		}, this)
 
 		return (
-			<div className="timeSelector">
+			<div className="timeSelector list">
 				{timeOptionNodes}
 			</div>
 		);
@@ -156,12 +166,6 @@ var TimeSelector = React.createClass({
 });
 
 var DiaperEvent = React.createClass({
-	getInitialState: function() {
-		return {
-			// Set `time` to the current time
-			date: new Date()
-		};
-	},
 	onDateUpdate: function(date) {
 		this.setState({
 			date: date
@@ -173,11 +177,35 @@ var DiaperEvent = React.createClass({
 	render: function() {
 		return (
 			<div>
-				Diaper event!!!
-				<form className="eventForm" onSubmit={this.handleSubmit}>
-					<TimeSelector onUpdate={this.onDateUpdate}/>
-					<input type="text" ref="details" placeholder="Details..." />
-				</form>
+				<Header title="Diaper Event"/>
+
+				<div className="content has-header">
+					<form className="eventForm" onSubmit={this.handleSubmit}>
+						<h4>When?</h4>
+						<TimeSelector onUpdate={this.onDateUpdate}/>
+
+						<h4>What?</h4>
+						<ul className="list">
+							<li className="item item-checkbox">
+								<label className="checkbox">
+									<input type="checkbox" ref="pee" />
+								</label>
+								Pee
+							</li>
+							<li className="item item-checkbox">
+								<label className="checkbox">
+									<input type="checkbox" ref="poo" />
+								</label>
+								Poo
+							</li>
+						</ul>
+
+						<h4>Notes</h4>
+						<textarea ref="notes" placeholder="Details..." />
+
+						<button className="button button-positive" type="submit">Save</button>
+					</form>
+				</div>
 			</div>
 		);
 	}
@@ -188,6 +216,12 @@ var FoodEvent = React.createClass({
 		return (
 			<div>
 				Food! 
+				{/*
+					- when?
+					- left boob, right, or both?
+					- spitup?
+					- solids?
+				*/}
 			</div>
 		);
 	}
@@ -214,7 +248,7 @@ var WakeEvent = React.createClass({
 });
 
 // Enable touch events
-React.initializeTouchEvents(true)
+React.initializeTouchEvents(true);
 
 // Define the app's routes
 var routes = (
@@ -229,5 +263,5 @@ var routes = (
 
 //Router.run(routes, Router.HistoryLocation, function (Handler) {
 Router.run(routes, function (Handler) {
-	React.render(<Handler/>, document.getElementById('app'));
+	React.render(<Handler/>, document.getElementById("app"));
 });
