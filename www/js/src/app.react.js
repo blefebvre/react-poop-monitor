@@ -7,7 +7,7 @@ var RouteHandler = Router.RouteHandler;
 var Navigation = Router.Navigation;
 
 // Backend
-var firebaseURI = "https://<your Firebase app name here>.firebaseio.com";
+var firebaseURI = "https://react-poop-monitor.firebaseio.com";
 
 var App = React.createClass({
 	render: function() {
@@ -43,22 +43,50 @@ var Dashboard = React.createClass({
 	}
 });
 
-var EventSelector = React.createClass({
+var EventTypeLink = React.createClass({
 	render: function() {
 		return (
-			<div>
-				<div className="half">
-					<Link to="diaperEvent">Diaper</Link>
-				</div>
-				<div className="half">
-					<Link to="foodEvent">Food</Link>
-				</div>
-				<div className="half">
-					<Link to="sleepEvent">Sleep</Link>
-				</div>
-				<div className="half">
-					<Link to="wakeEvent">Wake</Link>
-				</div>
+			<div className="half">
+				<Link to={this.props.linkTo}>{this.props.name}</Link>
+			</div>
+		);
+	}
+});
+
+var EventSelector = React.createClass({
+	render: function() {
+		var eventTypes = [
+			{
+				name: "Diaper",
+				linkTo: "diaperEvent",
+				imageSrc: "#"
+			},
+			{
+				name: "Food",
+				linkTo: "foodEvent",
+				imageSrc: "#"
+			},
+			{
+				name: "Sleep",
+				linkTo: "sleepEvent",
+				imageSrc: "#"
+			},
+			{
+				name: "Wake",
+				linkTo: "wakeEvent",
+				imageSrc: "#"
+			}
+		];
+		var eventTypeNodes = eventTypes.map(function(eventType) {
+			return (
+				<EventTypeLink name={eventType.name} 
+						linkTo={eventType.linkTo} 
+						imageSrc={eventType.imageSrc} />
+			);
+		});
+		return (
+			<div className="eventSelector">
+				{eventTypeNodes}
 			</div>
 		);
 	}
@@ -118,55 +146,6 @@ var EventList = React.createClass({
 	
 });
 
-var TimeSelector = React.createClass({
-	timeSelectionChanged: function(e) {
-		var eventDate = new Date();
-		var minutesInThePast = e.currentTarget.value;
-		eventDate.setMinutes(eventDate.getMinutes() - minutesInThePast);
-
-		this.props.onUpdate(eventDate);
-	},
-	componentDidMount: function() {
-		// Set current date initially
-		this.props.onUpdate(new Date());
-	},
-	render: function() {
-		var timeOptions = [
-			{ 
-				label: "Just now",
-				minutesInThePast: "0"
-			},
-			{ 
-				label: "Five minutes ago",
-				minutesInThePast: "5"
-			},
-			{ 
-				label: "Ten minutes ago",
-				minutesInThePast: "10"
-			},
-			{ 
-				label: "Twenty minutes ago",
-				minutesInThePast: "20"
-			}
-		];
-
-		var timeOptionNodes = timeOptions.map(function(timeOption, keyIndex) {
-			return (
-				<label htmlFor={"timeOption"+keyIndex} className="item item-radio" key={keyIndex}>
-					<input type="radio" name="timeOption" id={"timeOption"+keyIndex} defaultChecked={keyIndex === 0} onChange={this.timeSelectionChanged} value={timeOption.minutesInThePast} /> 
-					<div className="item-content">{timeOption.label}</div>
-					<i className="radio-icon ion-checkmark"></i>
-				</label>
-			);
-		}, this)
-
-		return (
-			<div className="timeSelector list">
-				{timeOptionNodes}
-			</div>
-		);
-	}
-});
 
 var DiaperEvent = React.createClass({
 	mixins: [Navigation],
