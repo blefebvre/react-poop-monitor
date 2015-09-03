@@ -4,9 +4,10 @@ var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
+var Navigation = Router.Navigation;
 
 // Backend
-var firebaseURI = "https://ReactFireTodoApp.firebaseio.com";
+var firebaseURI = "https://<your Firebase app name here>.firebaseio.com";
 
 var App = React.createClass({
 	render: function() {
@@ -69,10 +70,11 @@ var EventHistory = React.createClass({
 	},
 	componentWillMount: function() {
 		this.firebaseRef = new Firebase(firebaseURI + "/events/");
+		var eventItems = [];
 		this.firebaseRef.on("child_added", function(dataSnapshot) {
-			this.items.push(dataSnapshot.val());
+			eventItems.push(dataSnapshot.val());
 			this.setState({
-			  events: this.items
+			  events: eventItems
 			});
 		}.bind(this));
 	},
@@ -88,7 +90,7 @@ var Event = React.createClass({
 		return (
 			<div className="event">
 				<h2 className="eventType">{this.props.type}</h2>
-				<h3 className="eventTime">{this.props.time}</h3>
+				<h3 className="eventTime">{this.props.date.toTimeString()}</h3>
 				<div className="eventDetails">
 					{this.props.children}
 				</div>
@@ -100,9 +102,10 @@ var Event = React.createClass({
 var EventList = React.createClass({
 	render: function() {
 		var eventNodes = this.props.events.map(function (event) {
+			var eventDate = new Date(event.date);
 			return (
-				<Event time={event.time} type={event.type}>
-					{event.details}
+				<Event date={eventDate} type={event.type}>
+					{event.notes}
 				</Event>
 			);
 		});
@@ -166,13 +169,27 @@ var TimeSelector = React.createClass({
 });
 
 var DiaperEvent = React.createClass({
+	mixins: [Navigation],
 	onDateUpdate: function(date) {
 		this.setState({
 			date: date
 		});
 	},
-	handleSubmit: function() {
+	handleSubmit: function(e) {
+		e.preventDefault();
 
+		this.firebaseRef = new Firebase(firebaseURI + "/events/");
+
+		var eventDetails = {
+			date: this.state.date.getTime(),
+			pee: React.findDOMNode(this.refs.pee).checked,
+			poo: React.findDOMNode(this.refs.poo).checked,
+			notes: React.findDOMNode(this.refs.notes).value
+		}
+
+		this.firebaseRef.push(eventDetails);
+		
+		this.transitionTo('/');
 	},
 	render: function() {
 		return (
