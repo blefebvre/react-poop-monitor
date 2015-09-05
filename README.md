@@ -20,8 +20,7 @@ track gifts
 ## Run
 
 
-$ cd www/
-$ babel --watch js/src/ --out-dir js/build/
+$ babel --watch app-js-src/ --out-dir www/js/build/
 
 in another term
 $ cd www/
