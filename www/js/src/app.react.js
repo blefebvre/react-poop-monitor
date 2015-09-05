@@ -93,6 +93,7 @@ var EventSelector = React.createClass({
 	}
 });
 
+// Renders the list of events, in order of most recent to oldest
 var EventHistory = React.createClass({
 	getInitialState: function() {
 		return {events: []};
@@ -101,7 +102,7 @@ var EventHistory = React.createClass({
 		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 		var eventItems = [];
 		this.firebaseRef.on("child_added", function(dataSnapshot) {
-			// `unshift` instead of `push` to place the newest items at the 
+			// `unshift` used instead of `push` to place the newest items at the 
 			// top, timeline style
 			eventItems.unshift(dataSnapshot.val());
 			this.setState({
@@ -116,30 +117,16 @@ var EventHistory = React.createClass({
 	}
 });
 
-var Event = React.createClass({
-	render: function() {
-		var eventTypeImages = {
-
-		};
-		return (
-			<div className="item item-avatar">
-				<img src={"img/" + this.props.type + "_" + this.props.details + ".png"} />
-				<h2>{this.props.type}</h2>
-				<p>{this.props.date.toTimeString()}</p>
-			</div>
-		);
-	}
-});
-
 var EventList = React.createClass({
 	render: function() {
 		var eventNodes = this.props.events.map(function (event, keyIndex) {
-			var eventDate = new Date(event.date);
-			return (
-				<Event date={eventDate} type={event.type} details={event.details} key={keyIndex}>
-					{event.notes}
-				</Event>
-			);
+			var eventComponent;
+			if (event.type === "Diaper") {
+				return (<DiaperEvent event={event} key={keyIndex} />);
+			}
+			else {
+				return (<Event event={event} key={keyIndex} />);
+			}
 		});
 		return (
 			<div className="list card">
@@ -150,9 +137,42 @@ var EventList = React.createClass({
 	
 });
 
+var Event = React.createClass({
+	render: function() {
+		var event = this.props.event;
+		var imageSrc = "img/" + event.type + ".png";
+		var eventDate = new Date(event.date);
 
+		return (
+			<div className="item item-avatar">
+				<img src={imageSrc} />
+				<h2>{event.type}</h2>
+				<p>{eventDate.toTimeString()}</p>
+			</div>
+		);
+	}
+});
 
 var DiaperEvent = React.createClass({
+	render: function() {
+		var event = this.props.event;
+		var diaperImageSrc = "img/diaper_" + (event.pee ? "pee" : "") + 
+				(event.pee && event.poo ? "_" : "") + (event.poo ? "poo" : "") + 
+				".png";
+		var eventDate = new Date(event.date);
+
+		return (
+			<div className="item item-avatar">
+				<img src={diaperImageSrc} />
+				<h2>{event.type}</h2>
+				<p>{eventDate.toTimeString()}</p>
+			</div>
+		);
+	}
+});
+
+
+var DiaperEventForm = React.createClass({
 	// Navigation mixin required to use ReactRouter's `transitionTo(..)`
 	mixins: [Navigation],
 	onDateUpdate: function(date) {
@@ -165,23 +185,22 @@ var DiaperEvent = React.createClass({
 
 		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 
-		var pee = React.findDOMNode(this.refs.pee).checked;
-		var poo = React.findDOMNode(this.refs.poo).checked;
-		// TODO: I dislike how this is being stored
-		// use `e.target` instead (the form)
-		var details = (pee ? "pee" : "") + (pee && poo ? "_" : "") + (poo ? "poo" : "");
-
 		var eventDetails = {
 			type: "Diaper",
-			details: details,
+			pee: React.findDOMNode(this.refs.pee).checked,
+			poo: React.findDOMNode(this.refs.poo).checked,
 			date: this.state.date.getTime(),
 			notes: React.findDOMNode(this.refs.notes).value
 		}
 
-		this.firebaseRef.push(eventDetails);
+		this.firebaseRef.push(eventDetails, function complete(error) {
+			if (error) { 
+				return alert( "Firebase error: [" + error + "]"); 
+			}
 		
-		// Return to root once submission is complete
-		this.transitionTo('/');
+			// Return to root once submission is complete
+			this.transitionTo('/');
+		}.bind(this));
 	},
 	render: function() {
 		return (
@@ -263,7 +282,7 @@ React.initializeTouchEvents(true);
 // Define the app's routes
 var routes = (
 	<Route name="app" path="/" handler={App}>
-		<Route name="diaperEvent" handler={DiaperEvent}/>
+		<Route name="diaperEvent" handler={DiaperEventForm}/>
 		<Route name="foodEvent" handler={FoodEvent}/>
 		<Route name="sleepEvent" handler={SleepEvent}/>
 		<Route name="wakeEvent" handler={WakeEvent}/>
