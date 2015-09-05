@@ -50,9 +50,7 @@ var Dashboard = React.createClass({
 var EventTypeLink = React.createClass({
 	render: function() {
 		return (
-			<div className="half">
-				<Link to={this.props.linkTo}>{this.props.name}</Link>
-			</div>
+			<Link to={this.props.linkTo} className="button">{this.props.name}</Link>
 		);
 	}
 });
@@ -90,7 +88,7 @@ var EventSelector = React.createClass({
 			);
 		});
 		return (
-			<div className="eventSelector">
+			<div className="button-bar bar-light padding">
 				{eventTypeNodes}
 			</div>
 		);
