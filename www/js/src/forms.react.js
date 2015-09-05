@@ -49,6 +49,48 @@ var TimeSelector = React.createClass({
 	}
 });
 
+/*
+ * Event forms
+ */
+var GenericEventForm = React.createClass({
+	onDateUpdate: function(date) {
+		this.setState({
+			date: date
+		});
+	},
+	handleSubmit: function(e) {
+		e.preventDefault();
+
+		this.firebaseRef = new Firebase(firebaseURI + "/events/");
+
+		var eventDetails = {
+			type: this.props.eventType,
+			date: this.state.date.getTime(),
+			notes: React.findDOMNode(this.refs.notes).value
+		}
+
+		this.firebaseRef.push(eventDetails, function complete(error) {
+			if (error) { 
+				return alert( "Firebase error: [" + error + "]"); 
+			}
+			// Fire success callback
+			this.props.successCallback();
+		}.bind(this));
+	},
+	render: function() {
+		return (
+			<form className="eventForm" onSubmit={this.handleSubmit}>
+				<h4>When?</h4>
+				<TimeSelector onUpdate={this.onDateUpdate}/>
+
+				<h4>Notes</h4>
+				<textarea ref="notes" placeholder="Details..." />
+
+				<button className="button button-positive" type="submit">Save {this.props.eventType} Event</button>
+			</form>
+		);
+	}
+});
 
 var DiaperEventForm = React.createClass({
 	onDateUpdate: function(date) {
@@ -107,28 +149,3 @@ var DiaperEventForm = React.createClass({
 		);
 	}
 });
-
-var CheckboxList = React.createClass({
-	render: function() {
-		return (
-			<ul className="list">
-				{this.props.children}
-			</ul>
-		);
-	}
-});
-
-
-var CheckboxItem = React.createClass({
-	render: function() {
-		return (
-			<li className="item item-checkbox">
-				<label className="checkbox">
-					<input type="checkbox" ref={this.props.ref} />
-				</label>
-				{this.props.label}
-			</li>
-		);
-	}
-});
-

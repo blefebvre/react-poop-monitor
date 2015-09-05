@@ -137,6 +137,9 @@ var EventList = React.createClass({
 	
 });
 
+/*
+ * Event rendering components 
+ */
 var Event = React.createClass({
 	render: function() {
 		var event = this.props.event;
@@ -171,43 +174,9 @@ var DiaperEvent = React.createClass({
 	}
 });
 
-
-var FoodEvent = React.createClass({
-	render: function() {
-		return (
-			<div>
-				Food! 
-				{/*
-					- when?
-					- left boob, right, or both?
-					- spitup?
-					- solids?
-				*/}
-			</div>
-		);
-	}
-});
-
-var SleepEvent = React.createClass({
-	render: function() {
-		return (
-			<div>
-				Sleep!
-			</div>
-		);
-	}
-});
-
-var WakeEvent = React.createClass({
-	render: function() {
-		return (
-			<div>
-				Wake!
-			</div>
-		);
-	}
-});
-
+/*
+ * Event creation components
+ */
 var AddDiaperEvent = React.createClass({
 	// Navigation mixin required to use ReactRouter's `transitionTo(..)`
 	mixins: [Navigation],
@@ -227,6 +196,57 @@ var AddDiaperEvent = React.createClass({
 	}
 });
 
+var AddFoodEvent = React.createClass({
+	mixins: [Navigation],
+	eventAdded: function() {
+		this.transitionTo('/');
+	},
+	render: function() {
+		return (
+			<div>
+				<Header title="Food Event"/>
+				<div className="content has-header">
+					<GenericEventForm eventType="Food" successCallback={this.eventAdded} />
+				</div>
+			</div>
+		);
+	}
+});
+
+var AddSleepEvent = React.createClass({
+	mixins: [Navigation],
+	eventAdded: function() {
+		this.transitionTo('/');
+	},
+	render: function() {
+		return (
+			<div>
+				<Header title="Sleep Event"/>
+				<div className="content has-header">
+					<GenericEventForm eventType="Sleep" successCallback={this.eventAdded} />
+				</div>
+			</div>
+		);
+	}
+});
+
+var AddWakeEvent = React.createClass({
+	mixins: [Navigation],
+	eventAdded: function() {
+		this.transitionTo('/');
+	},
+	render: function() {
+		return (
+			<div>
+				<Header title="Wake Event"/>
+				<div className="content has-header">
+					<GenericEventForm eventType="Wake" successCallback={this.eventAdded} />
+				</div>
+			</div>
+		);
+	}
+});
+
 // Enable touch events
 React.initializeTouchEvents(true);
 
@@ -234,9 +254,9 @@ React.initializeTouchEvents(true);
 var routes = (
 	<Route name="app" path="/" handler={App}>
 		<Route name="diaperEvent" handler={AddDiaperEvent}/>
-		<Route name="foodEvent" handler={FoodEvent}/>
-		<Route name="sleepEvent" handler={SleepEvent}/>
-		<Route name="wakeEvent" handler={WakeEvent}/>
+		<Route name="foodEvent" handler={AddFoodEvent}/>
+		<Route name="sleepEvent" handler={AddSleepEvent}/>
+		<Route name="wakeEvent" handler={AddWakeEvent}/>
 		<DefaultRoute handler={Dashboard}/>
 	</Route>
 );
