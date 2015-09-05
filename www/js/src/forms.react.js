@@ -48,3 +48,28 @@ var TimeSelector = React.createClass({
 		);
 	}
 });
+
+var CheckboxList = React.createClass({
+	render: function() {
+		return (
+			<ul className="list">
+				{this.props.children}
+			</ul>
+		);
+	}
+});
+
+
+var CheckboxItem = React.createClass({
+	render: function() {
+		return (
+			<li className="item item-checkbox">
+				<label className="checkbox">
+					<input type="checkbox" ref={this.props.ref} />
+				</label>
+				{this.props.label}
+			</li>
+		);
+	}
+});
+

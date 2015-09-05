@@ -43,7 +43,7 @@ body {
 
 .half {
 	width: 50%;
-	float: left;
+	/*float: left;*/
 }
 
 h4 {

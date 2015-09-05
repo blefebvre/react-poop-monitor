@@ -77,11 +77,12 @@ var EventSelector = React.createClass({
 				imageSrc: "#"
 			}
 		];
-		var eventTypeNodes = eventTypes.map(function(eventType) {
+		var eventTypeNodes = eventTypes.map(function(eventType, keyIndex) {
 			return (
 				<EventTypeLink name={eventType.name} 
 						linkTo={eventType.linkTo} 
-						imageSrc={eventType.imageSrc} />
+						imageSrc={eventType.imageSrc}
+						key={keyIndex} />
 			);
 		});
 		return (
@@ -100,7 +101,9 @@ var EventHistory = React.createClass({
 		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 		var eventItems = [];
 		this.firebaseRef.on("child_added", function(dataSnapshot) {
-			eventItems.push(dataSnapshot.val());
+			// `unshift` instead of `push` to place the newest items at the 
+			// top, timeline style
+			eventItems.unshift(dataSnapshot.val());
 			this.setState({
 			  events: eventItems
 			});
@@ -115,13 +118,14 @@ var EventHistory = React.createClass({
 
 var Event = React.createClass({
 	render: function() {
+		var eventTypeImages = {
+
+		};
 		return (
-			<div className="event">
-				<h2 className="eventType">{this.props.type}</h2>
-				<h3 className="eventTime">{this.props.date.toTimeString()}</h3>
-				<div className="eventDetails">
-					{this.props.children}
-				</div>
+			<div className="item item-avatar">
+				<img src={"img/" + this.props.type + "_" + this.props.details + ".png"} />
+				<h2>{this.props.type}</h2>
+				<p>{this.props.date.toTimeString()}</p>
 			</div>
 		);
 	}
@@ -129,16 +133,16 @@ var Event = React.createClass({
 
 var EventList = React.createClass({
 	render: function() {
-		var eventNodes = this.props.events.map(function (event) {
+		var eventNodes = this.props.events.map(function (event, keyIndex) {
 			var eventDate = new Date(event.date);
 			return (
-				<Event date={eventDate} type={event.type}>
+				<Event date={eventDate} type={event.type} details={event.details} key={keyIndex}>
 					{event.notes}
 				</Event>
 			);
 		});
 		return (
-			<div className="eventList">
+			<div className="list card">
 				{eventNodes}
 			</div>
 		);
@@ -147,7 +151,9 @@ var EventList = React.createClass({
 });
 
 
+
 var DiaperEvent = React.createClass({
+	// Navigation mixin required to use ReactRouter's `transitionTo(..)`
 	mixins: [Navigation],
 	onDateUpdate: function(date) {
 		this.setState({
@@ -159,15 +165,22 @@ var DiaperEvent = React.createClass({
 
 		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 
+		var pee = React.findDOMNode(this.refs.pee).checked;
+		var poo = React.findDOMNode(this.refs.poo).checked;
+		// TODO: I dislike how this is being stored
+		// use `e.target` instead (the form)
+		var details = (pee ? "pee" : "") + (pee && poo ? "_" : "") + (poo ? "poo" : "");
+
 		var eventDetails = {
+			type: "Diaper",
+			details: details,
 			date: this.state.date.getTime(),
-			pee: React.findDOMNode(this.refs.pee).checked,
-			poo: React.findDOMNode(this.refs.poo).checked,
 			notes: React.findDOMNode(this.refs.notes).value
 		}
 
 		this.firebaseRef.push(eventDetails);
 		
+		// Return to root once submission is complete
 		this.transitionTo('/');
 	},
 	render: function() {
@@ -206,6 +219,7 @@ var DiaperEvent = React.createClass({
 		);
 	}
 });
+
 
 var FoodEvent = React.createClass({
 	render: function() {
