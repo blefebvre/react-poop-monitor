@@ -6,6 +6,10 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var Navigation = Router.Navigation;
 
+// Intl
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedRelative = ReactIntl.FormattedRelative;
+
 // Backend
 var firebaseURI = "https://react-poop-monitor.firebaseio.com";
 
@@ -147,11 +151,8 @@ var Event = React.createClass({
 		var eventDate = new Date(event.date);
 
 		return (
-			<div className="item item-avatar">
-				<img src={imageSrc} />
-				<h2>{event.type}</h2>
-				<p>{eventDate.toTimeString()}</p>
-			</div>
+			<EventItem imageSrc={imageSrc} type={event.type} 
+					date={eventDate} notes={event.notes} />
 		);
 	}
 });
@@ -165,14 +166,26 @@ var DiaperEvent = React.createClass({
 		var eventDate = new Date(event.date);
 
 		return (
+			<EventItem imageSrc={diaperImageSrc} type={event.type} 
+					date={eventDate} notes={event.notes} />
+		);
+	}
+});
+
+var EventItem = React.createClass({
+	mixins: [IntlMixin],
+	render: function() {
+		return (
 			<div className="item item-avatar">
-				<img src={diaperImageSrc} />
-				<h2>{event.type}</h2>
-				<p>{eventDate.toTimeString()}</p>
+				<img src={this.props.imageSrc} alt={this.props.type + " image"} />
+				<h2>{this.props.type}</h2>
+				<p><FormattedRelative value={this.props.date} /></p>
+				{this.props.notes ? <blockquote>{this.props.notes}</blockquote> : null}
 			</div>
 		);
 	}
 });
+
 
 /*
  * Event creation components
