@@ -36,15 +36,29 @@
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
 
 		<!-- Cordova -->
-		<script type="text/javascript" src="cordova.js"></script>
+		<script src="cordova.js"></script>
 
 		<!-- Firebase -->
 		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
+		<!-- Intl polyfill -->
+		<script src="js/lib/intl/Intl.min.js"></script>
+		<script src="js/lib/intl/locale-data/jsonp/en.js"></script>
+
+		<!-- Fastclick -->
+		<script src="js/lib/fastclick.js"></script>
+		<script>
+			if ('addEventListener' in document) {
+				document.addEventListener('DOMContentLoaded', function() {
+					FastClick.attach(document.body);
+				}, false);
+			}
+		</script>
+
 		<!-- React -->
-		<script type="text/javascript" src="js/lib/react.js"></script>
-		<script type="text/javascript" src="js/lib/ReactRouter.js"></script>
-		<script type="text/javascript" src="js/lib/react-intl.js"></script>
+		<script src="js/lib/react.js"></script>
+		<script src="js/lib/ReactRouter.js"></script>
+		<script src="js/lib/react-intl.js"></script>
 
 		<!-- Data provider - only use one of the following two scripts -->
 		<!-- localStorage provider -->
@@ -56,7 +70,7 @@
 		<div id="app"></div>
 		
 		<!-- React app code -->
-		<script type="text/javascript" src="js/build/forms.react.js"></script>
-		<script type="text/javascript" src="js/build/app.react.js"></script>
+		<script src="js/build/forms.react.js"></script>
+		<script src="js/build/app.react.js"></script>
 	</body>
 </html>
