@@ -1,0 +1,17 @@
+.slideRightToLeft-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in;
+}
+
+.slideRightToLeft-enter.slideRightToLeft-enter-active {
+  opacity: 1;
+}
+
+.slideRightToLeft-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.slideRightToLeft-leave.slideRightToLeft-leave-active {
+  opacity: 0.01;
+}

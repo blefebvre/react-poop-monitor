@@ -6,14 +6,27 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var Navigation = Router.Navigation;
 
+// Animated transitions
+var TransitionGroup = React.addons.CSSTransitionGroup;
+
 // Intl
 var IntlMixin = ReactIntl.IntlMixin;
 var FormattedRelative = ReactIntl.FormattedRelative;
 
 var App = React.createClass({
+	mixins: [Navigation],
+
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 	render: function() {
+		var path = this.context.router.getCurrentPath();
+		var segment = path.split('/')[1] || 'root';
 		return (
-			<RouteHandler/>
+			/* <TransitionGroup transitionName={segment === 'root' ? 'slideRightToLeft' : 'slideLeftToRight'}> */
+			<TransitionGroup transitionName="slideRightToLeft">
+				<RouteHandler key={segment} />
+			</TransitionGroup>
 		);
 	}
 });
