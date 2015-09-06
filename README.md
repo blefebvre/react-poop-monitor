@@ -34,3 +34,4 @@ $ python -m SimpleHTTPServer
 - [Ionic Framework CSS](http://ionicframework.com/) - mobile app UI elements
 - [Firebase](https://www.firebase.com/) - realtime data storage
 - [Cordova](https://cordova.apache.org/) - build native apps with web tech
+- [FastClick](https://github.com/ftlabs/fastclick) - remove 300ms click delay on iOS

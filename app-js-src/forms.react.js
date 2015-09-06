@@ -90,7 +90,9 @@ var GenericEventForm = React.createClass({
 				<h4>Notes</h4>
 				<textarea ref="notes" placeholder="Details..." />
 
-				<button className="button button-positive" type="submit">Save {this.props.eventType} Event</button>
+				<div className="padding">
+					<button className="button button-positive" type="submit">Save {this.props.eventType} Event</button>
+				</div>
 			</form>
 		);
 	}
@@ -152,7 +154,9 @@ var DiaperEventForm = React.createClass({
 				<h4>Notes</h4>
 				<textarea ref="notes" placeholder="Details..." />
 
-				<button className="button button-positive" type="submit">Save</button>
+				<div className="padding">
+					<button className="button button-positive" type="submit">Save Diaper Event</button>
+				</div>
 			</form>
 		);
 	}

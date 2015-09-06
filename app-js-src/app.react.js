@@ -19,9 +19,13 @@ var App = React.createClass({
 });
 
 var Header = React.createClass({
+	// Navigation mixin required to use ReactRouter's `goBack(..)`
+	mixins: [Navigation],
 	render: function() {
 		return (
 			<div className="bar bar-header bar-stable">
+				{this.props.hideBackButton ? null : 
+						<button onClick={this.goBack} className="button icon-left ion-chevron-left button-clear">Back</button>}
 				<h1 className="title">{this.props.title}</h1>
 			</div>
 		);
@@ -33,7 +37,7 @@ var Dashboard = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<Header title="Poop Monitor"/>
+				<Header title="Poop Monitor" hideBackButton={true} />
 
 				<div className="content has-header">
 					<EventSelector/>
