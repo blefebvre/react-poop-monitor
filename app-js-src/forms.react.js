@@ -58,10 +58,14 @@ var GenericEventForm = React.createClass({
 			date: date
 		});
 	},
+	componentWillMount: function() {
+		this.dataProvider = new PMDataProvider();
+	},
+	componentWillUnmount: function() {
+		this.dataProvider.close();
+	},
 	handleSubmit: function(e) {
 		e.preventDefault();
-
-		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 
 		var eventDetails = {
 			type: this.props.eventType,
@@ -69,9 +73,9 @@ var GenericEventForm = React.createClass({
 			notes: React.findDOMNode(this.refs.notes).value
 		}
 
-		this.firebaseRef.push(eventDetails, function complete(error) {
+		this.dataProvider.saveEvent(eventDetails, function complete(error) {
 			if (error) { 
-				return alert( "Firebase error: [" + error + "]"); 
+				return alert( "PMDataProvider error: [" + error + "]"); 
 			}
 			// Fire success callback
 			this.props.successCallback();
@@ -98,10 +102,14 @@ var DiaperEventForm = React.createClass({
 			date: date
 		});
 	},
+	componentWillMount: function() {
+		this.dataProvider = new PMDataProvider();
+	},
+	componentWillUnmount: function() {
+		this.dataProvider.close();
+	},
 	handleSubmit: function(e) {
 		e.preventDefault();
-
-		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 
 		var eventDetails = {
 			type: "Diaper",
@@ -111,7 +119,7 @@ var DiaperEventForm = React.createClass({
 			notes: React.findDOMNode(this.refs.notes).value
 		}
 
-		this.firebaseRef.push(eventDetails, function complete(error) {
+		this.dataProvider.saveEvent(eventDetails, function complete(error) {
 			if (error) { 
 				return alert( "Firebase error: [" + error + "]"); 
 			}

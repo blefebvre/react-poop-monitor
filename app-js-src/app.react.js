@@ -10,9 +10,6 @@ var Navigation = Router.Navigation;
 var IntlMixin = ReactIntl.IntlMixin;
 var FormattedRelative = ReactIntl.FormattedRelative;
 
-// Backend
-var firebaseURI = "https://react-poop-monitor.firebaseio.com";
-
 var App = React.createClass({
 	render: function() {
 		return (
@@ -101,16 +98,19 @@ var EventHistory = React.createClass({
 		return {events: []};
 	},
 	componentWillMount: function() {
-		this.firebaseRef = new Firebase(firebaseURI + "/events/");
 		var eventItems = [];
-		this.firebaseRef.on("child_added", function(dataSnapshot) {
+		this.dataProvider = new PMDataProvider();
+		this.dataProvider.getEvents(function(event) {
 			// `unshift` used instead of `push` to place the newest items at the 
 			// top, timeline style
-			eventItems.unshift(dataSnapshot.val());
+			eventItems.unshift(event);
 			this.setState({
 			  events: eventItems
 			});
 		}.bind(this));
+	},
+	componentWillUnmount: function() {
+		this.dataProvider.close();
 	},
 	render: function() {
 		return (
