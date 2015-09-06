@@ -50,7 +50,9 @@
 		<script>
 			if ('addEventListener' in document) {
 				document.addEventListener('DOMContentLoaded', function() {
-					FastClick.attach(document.body);
+					// FastClick has been disabled because it prevents 
+					// selection of Ionic radio boxes
+					//FastClick.attach(document.body);
 				}, false);
 			}
 		</script>
