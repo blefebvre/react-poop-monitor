@@ -117,15 +117,7 @@ var EventHistory = React.createClass({
 		this.dataProvider.close();
 	},
 	render: function() {
-		return (
-			<EventList events={this.state.events}/>
-		);
-	}
-});
-
-var EventList = React.createClass({
-	render: function() {
-		var eventNodes = this.props.events.map(function (event, keyIndex) {
+		var eventNodes = this.state.events.map(function (event, keyIndex) {
 			var eventComponent;
 			if (event.type === "Diaper") {
 				return (<DiaperEvent event={event} key={keyIndex} />);
@@ -140,7 +132,6 @@ var EventList = React.createClass({
 			</div>
 		);
 	}
-	
 });
 
 /*
