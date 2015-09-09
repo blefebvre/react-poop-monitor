@@ -1,30 +1,45 @@
 # Poop Monitor
 
-## About
 
-baby scheduler
-track:
-- poo
-- pee
-- eating
-- waking up
+## You will need
 
-track baby milestones
-- smile 
-- walk 
-- talk
+- npm (tested with v2.13.3)
+- Babel (`npm install --global babel`)
+- PhoneGap (`npm install --global phonegap`)
+- (optional) Xcode and Command Line Tools for running on iOS
+- (optional) Android SDK for running on Android
 
-track gifts
+
+## Build
+
+Watch the source dir for changes to files containing JSX which Babel will transform into JavaScript:
+
+	$ babel --watch app-js-src/ --out-dir www/js/build/
 
 
 ## Run
 
+To run the app targetting a specific platform (tested on iOS and Android):
 
-$ babel --watch app-js-src/ --out-dir www/js/build/
+	$ phonegap run ios
+	OR
+	$ phonegap run android
 
-in another term
-$ cd www/
-$ python -m SimpleHTTPServer
+
+## Test in a browser
+
+Navigate to the `www/` dir, and run a web server (Python SimpleHTTPServer may not be available on platforms other than OS X, but any web server will do):
+
+	$ cd www/
+	$ python -m SimpleHTTPServer
+
+In your browser, navigate to http://localhost:8000/ to try out the app.
+
+
+## Use Firebase data provider instead of localStorage
+
+// TODO
+
 
 ## Libraries
 
