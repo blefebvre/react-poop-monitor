@@ -38,7 +38,9 @@ In your browser, navigate to http://localhost:8000/ to try out the app.
 
 ## Use Firebase data provider instead of localStorage
 
-// TODO
+Create an account (or login) to https://www.firebase.com. Create a new app, and replace `<your Firebase app id>` in [firebase.data.js](www/js/data/firebase.data.js) with the name of the app you just created.
+
+To enable the Firebase data provider, comment out the localStorage data provider [script tag](www/index.html#L67), and remove the comment from the `js/data/firebase.data.js` script (2 lines down). The Poop Monitor will now use `events/` in your new app to store event data, transfering them to all app instances in realtime. 
 
 
 ## Libraries
